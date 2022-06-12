@@ -55,6 +55,7 @@ var port = process.env.PORT || 3000; //local=3000 remote=80
 //#endregion
 const user = require("./routes/user");
 const recipes = require("./routes/recipes");
+const search = require("./routes/search");
 const auth = require("./routes/auth");
 
 
@@ -81,6 +82,7 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 // Routings
 app.use("/users", user);
 app.use("/recipes", recipes);
+app.use("/search", search);
 app.use(auth);
 
 // Default router

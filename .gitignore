@@ -4,5 +4,3 @@ node_modules
 .vscode
 #codes/routes/recipes.js
 #codes\routes\recipes.js
-package.json
-package-lock.json
