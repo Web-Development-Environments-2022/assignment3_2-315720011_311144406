@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 router.post("/Register", async (req, res, next) => {
   try {
     // parameters exists
-    // valid parameters
+    // valid parameters 
     // username exists
     let user_details = {
       username: req.body.username,
@@ -16,7 +16,6 @@ router.post("/Register", async (req, res, next) => {
       country: req.body.country,
       password: req.body.password,
       email: req.body.email,
-      profilePic: req.body.profilePic
     }
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
@@ -25,13 +24,14 @@ router.post("/Register", async (req, res, next) => {
       throw { status: 409, message: "Username taken" };
 
     // add the new username
+    console.log(user_details);
     let hash_password = bcrypt.hashSync(
       user_details.password,
       parseInt(process.env.bcrypt_saltRounds)
     );
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+      `INSERT INTO users VALUES ('${user_details.username}', '${hash_password}', '${user_details.firstname}', '${user_details.lastname}',
+      '${user_details.country}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
