@@ -37,9 +37,18 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
+async function searchRecipe(query, number) {
+    return await axios.get(`${api_domain}/complexSearch`, {
+        params: {
+            query: query,
+            number: number
+        }
+    });
+}
+
 
 
 exports.getRecipeDetails = getRecipeDetails;
-
+exports.searchRecipe = searchRecipe;
 
 
