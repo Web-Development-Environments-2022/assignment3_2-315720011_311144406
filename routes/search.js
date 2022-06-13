@@ -17,7 +17,7 @@ router.get("", async (req, res, next) => {
         throw { status: 400, message: "Invalid Arguments" };
         
     const number = parseInt(params.number) || 5;
-    if(number != 5 && number != 10 && numer != 15)
+    if(number != 5 && number != 10 && number != 15)
         throw { status: 400, message: "Invalid Arguments" };
 
     const cuisine = params.cuisine || '';

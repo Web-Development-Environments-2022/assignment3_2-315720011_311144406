@@ -7,6 +7,7 @@ get 3 random recipe - omer
 get recipe full details - tomer
 
 create recipe table?
+create familiy table
 create myrecipe table
 implement create recipe
 implement get my recipes
