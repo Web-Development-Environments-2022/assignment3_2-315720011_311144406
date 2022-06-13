@@ -20,7 +20,7 @@ async function getRecipeInformation(recipe_id) {
 
 
 
-async function getRecipeDetails(recipe_id) {
+async function getRecipePreview(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
 
@@ -33,15 +33,33 @@ async function getRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        
     }
 }
 
+
 async function getRecipesPreview(recipes_id_array){
     let res = [];
-    for (const recipe_id of recipes_id_array) {
-        let recipe_info = await getRecipeDetails(recipe_id);
+    recipes_id_array.map(ecipe_id => res.push(getRecipePreview(ecipe_id)));
+    return await Promise.all(res);
+}
 
+async function getFullRecipeDetails(recipe_id) {
+    let recipe_info = await getRecipeInformation(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, extendedIngredients, instructions, servings} = recipe_info.data;
+    let ingredientsNameAmount = []
+    extendedIngredients.map(ingredient => ingredientsNameAmount.push(ingredient.name, ingredient.amount));
+    return {
+        id: id,
+        title: title,
+        readyInMinutes: readyInMinutes,
+        image: image,
+        popularity: aggregateLikes,
+        vegan: vegan,
+        vegetarian: vegetarian,
+        glutenFree: glutenFree,
+        ingredientsNameAmount: ingredientsNameAmount,
+        instructions: instructions,
+        servings: servings,
     }
 }
 
@@ -93,7 +111,8 @@ async function getRandomThreeRecipes(){
 }
 
 
-exports.getRecipeDetails = getRecipeDetails;
+exports.getFullRecipeDetails = getFullRecipeDetails;
+exports.getRecipesPreview = getRecipesPreview;
 exports.searchRecipe = searchRecipe;
 
 
