@@ -17,4 +17,14 @@ router.get("/:recipeId", async (req, res, next) => {
   }
 });
 
+router.get("/threerandom", async (req, res, next) => {
+  try {
+    const three_recipes = await recipes_utils.getRandomThreeRecipes();
+    res.send(three_recipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 module.exports = router;

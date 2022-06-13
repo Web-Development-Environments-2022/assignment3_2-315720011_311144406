@@ -71,7 +71,26 @@ async function searchRecipe(query, number, cuisine, diet ,intolerances) {
     return results;
 
 }
-
+async function getRandomRecipes(){
+    const response = await axios.get(`${api_domain}/random`,{
+        params: {
+            number: 10,
+            apiKey: process.env.spooncular_apiKey
+        }
+    });
+    return response;
+}
+async function getRandomThreeRecipes(){
+    let ten_random= await getRandomRecipes()
+    let filter_three = ten_random.data.recipes.filter((random)=>(random.instructions != ""))
+    
+    
+    if(filter_three < 3){
+        return getRandomThreeRecipes();
+    }
+    let id_list = [filter_three[0].data.id,filter_three[1].data.id,filter_three[2].data.id]
+    return getRecipesPreview(id_list)
+}
 
 
 exports.getRecipeDetails = getRecipeDetails;
