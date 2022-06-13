@@ -37,6 +37,14 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
+async function getRecipesPreview(recipes_id_array){
+    let res = [];
+    for (const recipe_id of recipes_id_array) {
+        let recipe_info = await getRecipeDetails(recipe_id);
+
+    }
+}
+
 async function searchRecipe(query, number, cuisine, diet ,intolerances) {
     params = { 
         query: query,
