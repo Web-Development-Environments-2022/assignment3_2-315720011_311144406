@@ -20,9 +20,7 @@ router.post("/Register", async (req, res, next) => {
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
 
-    if(!this.validParameters(user_details))
-      throw { status: 400, message: "Invalid Arguments" };
-    else if (users.find((x) => x.username === user_details.username))
+    if (users.find((x) => x.username === user_details.username))
       throw { status: 409, message: "Username taken" };
 
     

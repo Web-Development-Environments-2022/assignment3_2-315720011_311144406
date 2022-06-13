@@ -1,25 +1,35 @@
 var express = require("express");
 var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
-
-router.get("/", (req, res) => res.send("im here in search"));
+var url = require('url');
 
 
 /**
  * This path returns a full details of a recipe by its id
  */
-router.get("/:query", async (req, res, next) => {
+router.get("", async (req, res, next) => {
   try {
-    const number = parseInt(req.params.number) || 5;
-    console.log(number);
-    const query = req.params.query;
-    console.log(query);
+    var url_parts = url.parse(req.url, true);
+    var params = url_parts.query;
 
+    const query = params.query || "";
+    if(query === "")
+        throw { status: 400, message: "Invalid Arguments" };
+        
+    const number = parseInt(params.number) || 5;
+    if(number != 5 && number != 10 && numer != 15)
+        throw { status: 400, message: "Invalid Arguments" };
 
+    const cuisine = params.cuisine || '';
 
+    const diet = params.diet || '';
 
-    const recipe = await recipes_utils.searchRecipe(query, number);
-    res.send(recipe);
+    const intolerances = params.intolerances || '';
+
+    const recipes = await recipes_utils.searchRecipe(query, number, cuisine, diet ,intolerances);
+    //set coookies
+    req.session.recipes = recipes;
+    res.send(recipes);
   } catch (error) {
     next(error);
   }
