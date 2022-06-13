@@ -37,15 +37,30 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
-async function searchRecipe(query, number) {
-    let receipes = await axios.get(`${api_domain}/complexSearch`, {
-        params: {
-            query: query,
-            number: number,
-            apiKey: process.env.spooncular_apiKey
-        }
-    });
-    return receipes.data.results;
+async function searchRecipe(query, number, cuisine, diet ,intolerances) {
+    params = { 
+        query: query,
+        number: number,
+        apiKey: process.env.spooncular_apiKey
+    }
+    if (cuisine != "")
+        params.cuisine = cuisine;
+    if (diet != "")
+        params.diet = diet;
+    if (intolerances != "")
+        params.intolerances = intolerances;
+    let receipes = await axios.get(`${api_domain}/complexSearch`, {params});
+    results = receipes.data.results;
+    for (const receipe of results) {
+        let recipe_info = await getRecipeInformation(receipe.id);
+        receipe.readyInMinutes = recipe_info.data.readyInMinutes;
+        receipe.readyInMinutes = recipe_info.data.readyInMinutes;
+        receipe.vegan = recipe_info.data.vegan;
+        receipe.vegetarian = recipe_info.data.vegetarian;
+        receipe.glutenFree = recipe_info.data.glutenFree;
+        receipe.instructions = recipe_info.data.instructions;
+    }
+    return results;
 
 }
 

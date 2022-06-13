@@ -9,7 +9,6 @@ var url = require('url');
  */
 router.get("", async (req, res, next) => {
   try {
-
     var url_parts = url.parse(req.url, true);
     var params = url_parts.query;
 
@@ -21,7 +20,15 @@ router.get("", async (req, res, next) => {
     if(number != 5 && number != 10 && numer != 15)
         throw { status: 400, message: "Invalid Arguments" };
 
-    const recipes = await recipes_utils.searchRecipe(query, number);
+    const cuisine = params.cuisine || '';
+
+    const diet = params.diet || '';
+
+    const intolerances = params.intolerances || '';
+
+    const recipes = await recipes_utils.searchRecipe(query, number, cuisine, diet ,intolerances);
+    //set coookies
+    req.session.recipes = recipes;
     res.send(recipes);
   } catch (error) {
     next(error);
