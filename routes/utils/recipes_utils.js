@@ -89,30 +89,35 @@ async function searchRecipe(query, number, cuisine, diet ,intolerances) {
     return results;
 
 }
-async function getRandomRecipes(){
+async function getRandomRecipes() {
     const response = await axios.get(`${api_domain}/random`,{
         params: {
-            number: 10,
+            number: 1,
             apiKey: process.env.spooncular_apiKey
         }
+    
     });
+    console.log(response);
     return response;
 }
 async function getRandomThreeRecipes(){
-    let ten_random= await getRandomRecipes()
-    let filter_three = ten_random.data.recipes.filter((random)=>(random.instructions != ""))
+    let ten_random= await getRandomRecipes();
+    console.log(ten_random);
+    // let filter_three = ten_random.data.recipes.filter((random)=>(random.instructions != ""));
+    // console.log(filter_three[0].id);
     
-    
-    if(filter_three < 3){
-        return getRandomThreeRecipes();
-    }
-    let id_list = [filter_three[0].data.id,filter_three[1].data.id,filter_three[2].data.id]
-    return getRecipesPreview(id_list)
+    // if(filter_three < 3){
+    //     return getRandomThreeRecipes();
+    // }
+    // let id_list = [filter_three[0].id,filter_three[1].id,filter_three[2].id];
+    // console.log(id_list);
+    // return getRecipesPreview(id_list);
 }
 
 
 exports.getFullRecipeDetails = getFullRecipeDetails;
 exports.getRecipesPreview = getRecipesPreview;
 exports.searchRecipe = searchRecipe;
+exports.getRandomThreeRecipes = getRandomThreeRecipes;
 
 
