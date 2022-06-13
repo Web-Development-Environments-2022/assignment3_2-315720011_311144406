@@ -25,13 +25,13 @@ router.post("/Register", async (req, res, next) => {
 
     
     // add the new username
-    console.log(user_details);
     let hash_password = bcrypt.hashSync(
       user_details.password,
       parseInt(process.env.bcrypt_saltRounds)
     );
+    let user_id = hashCode(user_details.username);
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${hash_password}', '${user_details.firstname}', '${user_details.lastname}',
+      `INSERT INTO users VALUES ('${user_id}', '${user_details.username}', '${hash_password}', '${user_details.firstname}', '${user_details.lastname}',
       '${user_details.country}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
@@ -39,6 +39,17 @@ router.post("/Register", async (req, res, next) => {
     next(error);
   }
 });
+
+function hashCode(string) {
+  var hash = 0, i, chr;
+  if (string.length === 0) return hash;
+  for (i = 0; i < string.length; i++) {
+    chr   = string.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
 
 router.post("/Login", async (req, res, next) => {
   try {
