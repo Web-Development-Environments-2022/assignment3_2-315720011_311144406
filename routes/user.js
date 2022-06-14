@@ -22,11 +22,13 @@ router.use(async function (req, res, next) {
 
 
 /**
+ * 
  * This path gets body with recipeId and save this recipe in the favorites list of the logged-in user
  */
 router.post('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
+    console.log(user_id);
     const recipe_id = req.body.recipeId;
     await user_utils.markAsFavorite(user_id,recipe_id);
     res.status(200).send("The Recipe successfully saved as favorite");
@@ -45,6 +47,9 @@ router.get('/favorites', async (req,res,next) => {
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
     const results = await recipe_utils.getRecipesPreview(recipes_id_array);
+    
+    if(results.length === 0)
+      throw { status: 204, message: "No saved favorites." };
     res.status(200).send(results);
   } catch(error){
     next(error); 
@@ -55,12 +60,16 @@ router.get('/myrecipes', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipes = await user_utils.getMyRecipes(user_id);
-    const result = []
-    recipes.map((recipe) => {
-      recipe.ingredients = user_utils.getIngredients(recipe.recipe_id);
-      console.log(user_utils.getIngredients(recipe.recipe_id));
-    });
-    res.status(200).send(recipes);
+    let result = [];
+
+    for(const recipe of recipes){
+      ingredients = await user_utils.getIngredients(recipe.recipe_id);
+      recipe.ingredients=ingredients;
+      result.push(recipe)
+    }
+    if(result.length === 0)
+      throw { status: 204, message: "No created recepies." };
+    res.status(200).send(result);
   } catch(error){
     next(error); 
   }

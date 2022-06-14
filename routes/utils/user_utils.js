@@ -16,7 +16,7 @@ async function getMyRecipes(user_id){
 
 async function getIngredients(recipe_id){
     const ingrediants = await DButils.execQuery(`select name, amount from ingredients where recipe_id='${recipe_id}'`);
-    return await Promise.all(ingrediants);
+    return ingrediants;
 }
 
 
