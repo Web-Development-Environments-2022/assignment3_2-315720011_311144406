@@ -10,9 +10,13 @@ async function getFavoriteRecipes(user_id){
     
 }
 async function getMyRecipes(user_id){
-    
     const recipes = await DButils.execQuery(`select * from recipes where user_id='${user_id}'`);
     return recipes;
+}
+
+async function getIngredients(recipe_id){
+    const ingrediants = await DButils.execQuery(`select name, amount from ingredients where recipe_id='${recipe_id}'`);
+    return await Promise.all(ingrediants);
 }
 
 
@@ -44,3 +48,4 @@ exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.createRecipe = createRecipe;
 exports.getMyRecipes = getMyRecipes;
+exports.getIngredients = getIngredients;
