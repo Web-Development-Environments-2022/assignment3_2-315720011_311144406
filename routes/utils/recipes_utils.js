@@ -67,7 +67,8 @@ async function searchRecipe(query, number, cuisine, diet ,intolerances) {
     params = { 
         query: query,
         number: number,
-        apiKey: process.env.spooncular_apiKey
+        apiKey: process.env.spooncular_apiKey,
+        instructionsRequired: true
     }
     if (cuisine != "")
         params.cuisine = cuisine;
