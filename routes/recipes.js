@@ -8,7 +8,7 @@ router.get("/", (req, res) => res.send("im here in recipes"));
 /**
  * This path returns a full details of a recipe by its id
  */
-router.get("/:recipeId", async (req, res, next) => {
+router.get("/information/:recipeId", async (req, res, next) => {
   try {
     const recipe = await recipes_utils.getFullRecipeDetails(req.params.recipeId);
     res.send(recipe);
@@ -16,5 +16,6 @@ router.get("/:recipeId", async (req, res, next) => {
     next(error);
   }
 });
+
 
 module.exports = router;

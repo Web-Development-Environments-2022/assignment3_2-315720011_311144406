@@ -53,6 +53,35 @@ router.get('/favorites', async (req,res,next) => {
 });
 
 
+router.post("/createrecipe", async (req, res, next) => {
+  try {
+    let recipe_details = {
+      user_id: req.session.user_id,
+      title: req.body.title,
+      readyInMinutes: parseInt(req.body.readyInMinutes),
+      image: req.body.image,
+      popularity: 0,
+      vegan: req.body.vegan,
+      vegetarian: req.body.vegetarian,
+      gluten_free: req.body.gluten_free,
+      instructions: req.body.instructions,
+      servings: parseInt(req.body.servings),
+      ingredientsNameAmount: req.body.ingredientsNameAmount,
+    }
+
+    await user_utils.createRecipe(recipe_details);
+    res.status(201).send({ message: "recipe created", success: true });
+  } catch (error) {
+    if(error == 409){
+      res.status(409).send({ message: "recipe title already exists for user", success: false });
+    }
+    else{
+      next(error);
+    }
+  }
+});
+
+
 
 
 module.exports = router;
