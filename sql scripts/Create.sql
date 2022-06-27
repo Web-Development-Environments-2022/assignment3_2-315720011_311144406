@@ -39,6 +39,6 @@ DROP TABLE If EXISTS ingredients;
 CREATE TABLE ingredients (
     recipe_id INT NOT NULL REFERENCES recipes(recipe_id),
     name VARCHAR(30) NOT NULL,
-    amount INT NOT NULL,
+    amount VARCHAR(30) NOT NULL,
     CONSTRAINT ingredientOfRecipe PRIMARY KEY(recipe_id, name)
 );

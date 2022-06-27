@@ -71,18 +71,21 @@ router.post("/createrecipe", async (req, res, next) => {
   try {
     let recipe_details = {
       user_id: req.session.user_id,
-      title: req.body.title,
+      title: req.body.title.replace("'","''"),
       readyInMinutes: parseInt(req.body.readyInMinutes),
       image: req.body.image,
       popularity: 0,
       vegan: req.body.vegan,
       vegetarian: req.body.vegetarian,
       gluten_free: req.body.gluten_free,
-      instructions: req.body.instructions,
+      instructions: req.body.instructions.replace("'","''"),
       servings: parseInt(req.body.servings),
       ingredientsNameAmount: req.body.ingredientsNameAmount,
     }
 
+    if(!recipe_details.image){
+      recipe_details.image = ''
+    }
     await user_utils.createRecipe(recipe_details);
     res.status(201).send({ message: "recipe created", success: true });
   } catch (error) {
