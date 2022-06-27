@@ -43,11 +43,21 @@ async function getRecipesPreview(recipes_id_array){
     return await Promise.all(res);
 }
 
+async function getRecipeAnalyzedInstructions(recipe_id) {
+    return await axios.get(`${api_domain}/${recipe_id}/analyzedInstructions`, {
+        params: {
+            apiKey: process.env.spooncular_apiKey
+        }
+    });
+}
+
 async function getFullRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, extendedIngredients, instructions, servings} = recipe_info.data;
-    let ingredientsNameAmount = []
-    extendedIngredients.map(ingredient => ingredientsNameAmount.push(ingredient.name, ingredient.amount));
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,
+         extendedIngredients, instructions, servings} = recipe_info.data;
+
+    let analyzedInstructionsData = await getRecipeAnalyzedInstructions(recipe_id);
+    let analyzedInstructions = analyzedInstructionsData.data[0];
     return {
         id: id,
         title: title,
@@ -57,7 +67,8 @@ async function getFullRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        ingredientsNameAmount: ingredientsNameAmount,
+        extendedIngredients: extendedIngredients,
+        analyzedInstructions: analyzedInstructions,
         instructions: instructions,
         servings: servings,
     }
