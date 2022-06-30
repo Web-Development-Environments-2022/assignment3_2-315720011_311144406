@@ -28,8 +28,22 @@ router.post('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipe_id = req.body.recipeId;
-    await user_utils.markAsFavorite(user_id,recipe_id);
-    res.status(200).send("The Recipe successfully saved as favorite");
+    await user_utils.markAsFavorite(user_id, recipe_id);
+    res.status(200).send("The Recipe was successfully added to favorites");
+    } catch(error){
+    next(error);
+  }
+})
+
+/**
+ * This path gets body with recipeId and removes this recipe in the favorites list of the logged-in user
+ */
+ router.post('/favorites/remove', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipeId;
+    await user_utils.markAsFavorite(user_id, recipe_id);
+    res.status(200).send("The Recipe was successfully removed from favorites");
     } catch(error){
     next(error);
   }
@@ -55,10 +69,11 @@ router.get('/myrecipes', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipes = await user_utils.getMyRecipes(user_id);
-    const result = []
+
     recipes.map((recipe) => {
       recipe.ingredients = user_utils.getIngredients(recipe.recipe_id);
-      console.log(user_utils.getIngredients(recipe.recipe_id));
+      recipe.id = recipe.recipe_id;
+      recipe.recipe_id = undefined;
     });
     res.status(200).send(recipes);
   } catch(error){
