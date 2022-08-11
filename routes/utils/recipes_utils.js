@@ -39,7 +39,7 @@ async function getRecipePreview(recipe_id) {
 
 async function getRecipesPreview(recipes_id_array){
     let res = [];
-    recipes_id_array.map(ecipe_id => res.push(getRecipePreview(ecipe_id)));
+    recipes_id_array.map(recipe_id => res.push(getRecipePreview(recipe_id)));
     return await Promise.all(res);
 }
 

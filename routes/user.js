@@ -113,6 +113,28 @@ router.post("/createrecipe", async (req, res, next) => {
   }
 });
 
+router.post('/viewed', async (req,res,next) => {
+  try{
+    const recipes = await recipe_utils.getRecipesPreview(req.session.watched);
+    if(req.session && req.session.user_id) {
+      recipes_ids = await user_utils.getFavoriteRecipesIds(req.session.user_id);
+    }
+    three_recipes = recipes.slice(-3);
+    three_recipes.map(recipe => {
+      if(recipes_ids.includes(recipe.id)){
+        recipe.favorited = true;
+      }
+      else{
+        recipe.favorited = false;
+      }
+    });
+    res.status(200).send(three_recipes);
+  } catch(error){
+    next(error); 
+  }
+});
+
+
 
 
 
