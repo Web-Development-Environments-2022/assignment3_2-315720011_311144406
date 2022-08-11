@@ -57,6 +57,12 @@ router.get("/random", async (req, res, next) => {
         else{
           recipe.favorited = false;
         }
+        if(req.session.watched.includes(recipe.id)){
+          recipe.watched = true;
+        }
+        else{
+          recipe.watched = false;
+        }
       });
       console.log(cacheRecepies);
       res.send(cacheRecepies);
@@ -74,6 +80,12 @@ router.get("/random", async (req, res, next) => {
         }
         else{
           recipe.favorited = false;
+        }
+        if(req.session.watched.includes(recipe.id)){
+          recipe.watched = true;
+        }
+        else{
+          recipe.watched = false;
         }
       });
       cacheRecepies = three_recipes;
@@ -109,6 +121,10 @@ router.get("/information/:recipeId", async (req, res, next) => {
       }
       cacheRecepie = recipe;
       console.log(cacheRecepie);
+      //mark as watched
+      req.session.watched.push(recipe.id);
+      recipe.watched = true;
+
       res.send(recipe);
     }
   } catch (error) {

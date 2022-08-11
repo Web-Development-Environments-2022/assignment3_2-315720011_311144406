@@ -23,6 +23,12 @@ router.get("", async (req, res, next) => {
         else{
           recipe.favorited = false;
         }
+        if(req.session.watched.includes(recipe.id)){
+          recipe.watched = true;
+        }
+        else{
+          recipe.watched = false;
+        }
       });
       console.log(cacheRecepies);
       res.send(cacheRecepies);
@@ -57,6 +63,12 @@ router.get("", async (req, res, next) => {
         }
         else{
           recipe.favorited = false;
+        }
+        if(req.session.watched.includes(recipe.id)){
+          recipe.watched = true;
+        }
+        else{
+          recipe.watched = false;
         }
       });
       
