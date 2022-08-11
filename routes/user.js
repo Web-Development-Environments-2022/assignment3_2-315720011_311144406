@@ -28,7 +28,7 @@ router.post('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipe_id = req.body.recipeId;
-    await user_utils.markAsFavorite(user_id, recipe_id);
+    await user_utils.markFavorite(user_id, recipe_id);
     res.status(200).send("The Recipe was successfully added to favorites");
     } catch(error){
     next(error);
@@ -41,8 +41,9 @@ router.post('/favorites', async (req,res,next) => {
  router.post('/favorites/remove', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
+    console.log(user_id);
     const recipe_id = req.body.recipeId;
-    await user_utils.markAsFavorite(user_id, recipe_id);
+    await user_utils.removeFavorite(user_id, recipe_id);
     res.status(200).send("The Recipe was successfully removed from favorites");
     } catch(error){
     next(error);
@@ -55,10 +56,9 @@ router.post('/favorites', async (req,res,next) => {
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    const recipes_id = await user_utils.getFavoriteRecipes(user_id);
-    let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
+    const recipes_id = await user_utils.getFavoriteRecipesIds(user_id);
+    const results = await recipe_utils.getRecipesPreview(recipes_id);
+    results.map((recipe => recipe.favorited = true));
     res.status(200).send(results);
   } catch(error){
     next(error); 
