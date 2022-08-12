@@ -115,12 +115,12 @@ router.post("/createrecipe", async (req, res, next) => {
 
 router.post('/viewed', async (req,res,next) => {
   try{
-    const recipes = await recipe_utils.getRecipesPreview(req.session.watched);
+    console.log(req.body.lastThreeRecipesIds);
+    const recipes = await recipe_utils.getRecipesPreview(req.body.lastThreeRecipesIds);
     if(req.session && req.session.user_id) {
       recipes_ids = await user_utils.getFavoriteRecipesIds(req.session.user_id);
     }
-    three_recipes = recipes.slice(-3);
-    three_recipes.map(recipe => {
+    recipes.map(recipe => {
       if(recipes_ids.includes(recipe.id)){
         recipe.favorited = true;
       }
@@ -128,7 +128,7 @@ router.post('/viewed', async (req,res,next) => {
         recipe.favorited = false;
       }
     });
-    res.status(200).send(three_recipes);
+    res.status(200).send(recipes);
   } catch(error){
     next(error); 
   }
