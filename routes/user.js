@@ -70,11 +70,13 @@ router.get('/myrecipes', async (req,res,next) => {
     const user_id = req.session.user_id;
     const recipes = await user_utils.getMyRecipes(user_id);
 
-    recipes.map((recipe) => {
-      recipe.ingredients = user_utils.getIngredients(recipe.recipe_id);
+    for(const recipe of recipes){
+      recipe.ingredients = await user_utils.getIngredients(recipe.recipe_id);
+      recipe.readyInMinutes = recipe.ready_in_minutes;
+      recipe.ready_in_minutes = undefined;
       recipe.id = recipe.recipe_id;
       recipe.recipe_id = undefined;
-    });
+    }
     res.status(200).send(recipes);
   } catch(error){
     next(error); 
